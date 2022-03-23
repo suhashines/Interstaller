@@ -6,7 +6,7 @@
 /*
 	function iDraw() is called again and again by the system.
 */
-
+// sending pull request to prithu
 int x=284,y=150;
 int r=255,g=255,b=255,temp;
 
@@ -101,7 +101,7 @@ int main()
 	//PlaySound((LPCSTR) "C:\\IGraphics-master\\eightyears.wav", NULL, SND_FILENAME | SND_ASYNC);
     //DWORD dwError = GetLastError();
 
-	iInitialize(768, 1000, "Spacehship Demo");
+	iInitialize(1200, 1000, "Spacehship Demo");
 
 	return 0;
 }
