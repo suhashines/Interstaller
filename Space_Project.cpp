@@ -1,29 +1,49 @@
 # include "iGraphics.h"
 # include "gl.h"
 
-//Shonibar ghurte ay Basundhara
+#define scrnwidth 1080
+#define scrnheight 1920
 
-//B for bonchito
+int sx=520,sy=100; //size of the spaceship 160 , 158
+
+int bulletmode=0;
+
+float bulletx=sx+80,bullety=sy+158;
+
+float cx=sx+200,cy=1000 ,comangle ,comdy ;
+float targetx=600 , targety=100;
+
+//coordinate place korar age ettu image er height width gula check kore nish calculation er jonno
 
 
-/*
-	function iDraw() is called again and again by the system.
-*/
-// sending pull request to prithu anan
-//don't know what's wrong
-int x=284,y=150;
-int r=255,g=255,b=255,temp;
 
+
+char spaceship[30]="bmp images\\spaceship.bmp";
+char commet[30]="bmp images\\commet.bmp";
+
+// nicher chobigula edit korte hobe
+char asteroid1[30]="bmp images\\asteroid1.bmp";
+char asteroid2[30]="bmp images\\asteroid2.bmp";
+char alien1[30]="bmp images\\alien1.bmp";
+char alien2[30]="bmp images\\alien2.bmp";
+char alien3[30]="bmp images\\alien3.bmp";
 
 void iDraw()
 {
 	//place your drawing codes here
 
 	iClear();
-	iShowBMP(0,0,"C:\\IGraphics-master\\bmp pictures\\bcspace.bmp");
-    iShowBMP2(x,y, "C:\\IGraphics-master\\bmp pictures\\space.bmp" , 0x00ffffff);
-    iSetColor(255,255,0);
-    iText(x-15,y+65,"Suhas & Prithu",GLUT_BITMAP_HELVETICA_18);
+	iShowBMP(0,0,"bmp images\\background.bmp");
+    iShowBMP2(sx,sy, spaceship , 0x00ffffff);
+    iSetColor(120,200,150);
+    iFilledCircle(bulletx,bullety,10,100);
+    //iText(x-15,y+65,"Suhas & Prithu",GLUT_BITMAP_HELVETICA_18);
+    iShowBMP2(cx,cy, commet , 0x00ffffff);
+
+    if(bulletmode==1)
+    {
+        iFilledCircle(sx+80,sy+158,10,100);
+    }
 
 
 }
@@ -66,6 +86,31 @@ void iKeyboard(unsigned char key)
 {
 	//place your codes for other keys here */
 
+    if((key=='w' || key=='W')  && sy<700){
+           sy+=10;
+           bullety+=10;      }
+
+           // spaceship er movement ami set kore disi. tor ar change korar dorkar nai
+
+    else if((key=='s' || key=='S')  && sy>45){
+           sy-=10;
+           bullety-=10;       }
+
+    else if((key=='a' || key=='A')  && sx>10){
+           sx-=10;
+           bulletx-=10;   }
+
+    else if((key=='d' || key=='D')  && sx<900){
+           sx+=10;
+           bulletx+=10;       }
+
+    if(key=='m')
+       {
+           bulletmode=1;
+
+       }
+
+
 }
 
 /*
@@ -78,21 +123,57 @@ void iKeyboard(unsigned char key)
 	GLUT_KEY_PAGE DOWN, GLUT_KEY_HOME, GLUT_KEY_END, GLUT_KEY_INSERT
 */
 void iSpecialKeyboard(unsigned char key)
-{   if(key== GLUT_KEY_UP && y<855){
-           y+=10;       }
-
-    else if(key== GLUT_KEY_DOWN && y>45){
-           y-=10;       }
-
-    else if(key== GLUT_KEY_LEFT && x>10){
-           x-=10;   }
-
-     else if(key== GLUT_KEY_RIGHT && x<650){
-           x+=10;       }
-
+{
 
 
 	//place your codes for other keys here
+}
+
+void animation()
+{
+
+   //commet that targets the spaceship
+
+    float xdiff = cx-targetx;
+    float ydiff = cy - targety ;
+    float comdx=1;
+
+    if(xdiff==0)
+        xdiff++;
+
+    comangle=ydiff/xdiff ;
+
+    cx-=comdx;
+
+    comdy=comdx*comangle ;
+
+    cy-=comdy;
+
+    if(cy==122)
+    {
+        cx=sx+600;
+        cy=1000;
+        targetx=sx;
+        targety=sy;
+        // commet ta ken jani y=0 te jawar por o x axis borabor move korte thake bujhtesi na. ettu dekhish to
+
+    }
+
+
+
+    // bullet ektar por ekta kemne shoot hobe eta partesi na
+    if(bulletmode==1)
+    {
+        bullety+=5 ;
+
+        if(bullety==1000)
+        {
+            bullety=sx+158;
+            bulletmode=0;
+        }
+
+    }
+
 }
 
 
@@ -102,8 +183,7 @@ int main()
 //    DWORD dwError = GetLastError();
 
 	//place your own initialization codes here.
-	//PlaySound((LPCSTR) "C:\\IGraphics-master\\eightyears.wav", NULL, SND_FILENAME | SND_ASYNC);
-    //DWORD dwError = GetLastError();
+	iSetTimer(10,animation);
 
 	iInitialize(1200, 1000, "Spacehship Demo");
 
