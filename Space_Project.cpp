@@ -1,8 +1,8 @@
 # include "iGraphics.h"
 # include "gl.h"
 
-#define scrnwidth 1200
-#define scrnheight 1000
+#define scrnwidth 1080
+#define scrnheight 1920
 
 int sx=520,sy=100; //size of the spaceship 160 , 158
 
@@ -11,13 +11,17 @@ int bulletmode=0;
 float bulletx=sx+80,bullety=sy+158;
 
 float cx=sx+200,cy=1000 ,comangle ,comdy ;
+float targetx=600 , targety=100;
 
+//coordinate place korar age ettu image er height width gula check kore nish calculation er jonno
 
 
 
 
 char spaceship[30]="bmp images\\spaceship.bmp";
 char commet[30]="bmp images\\commet.bmp";
+
+// nicher chobigula edit korte hobe
 char asteroid1[30]="bmp images\\asteroid1.bmp";
 char asteroid2[30]="bmp images\\asteroid2.bmp";
 char alien1[30]="bmp images\\alien1.bmp";
@@ -29,7 +33,7 @@ void iDraw()
 	//place your drawing codes here
 
 	iClear();
-	//iShowBMP(0,0,"C:\\IGraphics-master\\bmp pictures\\bcspace.bmp");
+	iShowBMP(0,0,"bmp images\\background.bmp");
     iShowBMP2(sx,sy, spaceship , 0x00ffffff);
     iSetColor(120,200,150);
     iFilledCircle(bulletx,bullety,10,100);
@@ -82,9 +86,11 @@ void iKeyboard(unsigned char key)
 {
 	//place your codes for other keys here */
 
-    if((key=='w' || key=='W')  && sy<755){
+    if((key=='w' || key=='W')  && sy<700){
            sy+=10;
            bullety+=10;      }
+
+           // spaceship er movement ami set kore disi. tor ar change korar dorkar nai
 
     else if((key=='s' || key=='S')  && sy>45){
            sy-=10;
@@ -94,7 +100,7 @@ void iKeyboard(unsigned char key)
            sx-=10;
            bulletx-=10;   }
 
-    else if((key=='d' || key=='D')  && sx<1040){
+    else if((key=='d' || key=='D')  && sx<900){
            sx+=10;
            bulletx+=10;       }
 
@@ -127,11 +133,10 @@ void animation()
 {
 
    //commet that targets the spaceship
-    float targetx=600;
-    float targety=100;
+
     float xdiff = cx-targetx;
     float ydiff = cy - targety ;
-    float comdx=0.2;
+    float comdx=1;
 
     if(xdiff==0)
         xdiff++;
@@ -144,17 +149,19 @@ void animation()
 
     cy-=comdy;
 
-    if(cx<0 || cy<-122)
+    if(cy==122)
     {
         cx=sx+600;
         cy=1000;
-        targetx=sx+80;
+        targetx=sx;
+        targety=sy;
+        // commet ta ken jani y=0 te jawar por o x axis borabor move korte thake bujhtesi na. ettu dekhish to
 
     }
 
 
 
-
+    // bullet ektar por ekta kemne shoot hobe eta partesi na
     if(bulletmode==1)
     {
         bullety+=5 ;
