@@ -16,6 +16,20 @@ float bulletx=sx+80,bullety=sy+158;
 float cx=sx+200,cy=1000 ,comangle ,comdy ;
 float targetx=600 , targety=100;
 
+//asteroid algorithms
+
+float asterx=111;
+float astery=1500;
+float asterx2=asterx+500;
+float astery2=1700;
+float asterx3=asterx2+350;
+float astery3=1900;
+
+//explosion algorithm
+int expomode=0;
+float expox,expoy;
+
+
 //coordinate place korar age ettu image er height width gula check kore nish calculation er jonno
 
 
@@ -24,12 +38,15 @@ float targetx=600 , targety=100;
 char spaceship[50]="bmp images\\spaceship.bmp";
 char commet[50]="bmp images\\commet.bmp";
 
-// nicher chobigula edit korte hobe
+
 char asteroid1[50]="bmp images\\asteroid1.bmp";
 char asteroid2[50]="bmp images\\asteroid2.bmp";
+char asteroid3[50]="bmp images\\asteroid3.bmp";
 char alien1[50]="bmp images\\alien1.bmp";
 char alien2[50]="bmp images\\alien2.bmp";
 char alien3[50]="bmp images\\alien3.bmp";
+char explosion[50]="bmp images\\explosion.bmp";
+
 // I can't see how I can crop these images even more.
 char eight[50]="eightyears.wav";
 char intro[50]="Menu Background\\Intro1.bmp";
@@ -68,18 +85,56 @@ void iDraw()
         iShowBMP2(sx,sy, spaceship , 0x00ffffff);
         iSetColor(120,200,150);
         iFilledCircle(bulletx,bullety,10,100);
-        //iText(x-15,y+65,"Suhas & Prithu",GLUT_BITMAP_HELVETICA_18);
-        iShowBMP2(cx,cy, commet , 0x00ffffff);
-
         if(bulletmode==1)
         {
             iFilledCircle(sx+80,sy+158,10,100);
         }
+
+        //iShowBMP2(cx,cy, commet , 0x00ffffff);
+        iShowBMP2(asterx,astery,asteroid1,0x00ffffff);
+        iShowBMP2(asterx2,astery2,asteroid2,0x00ffffff);
+        iShowBMP2(asterx3,astery3,asteroid3,0x00ffffff);
+        if(expomode==1)
+        {
+            iShowBMP2(expox,expoy,explosion,0x00ffffff);
+            expomode=0;
+        }
+
+
 	}
-	if(mode==3) iShowBMP(275,0,inspage);
-	if(mode==4) iShowBMP(275,0,highpage);
-	if(mode==5) iShowBMP(275,0,credpage);
+	if(mode==3)
+        {
+            iShowBMP(275,0,inspage);
+            iSetColor(120,200,150);
+            iFilledRectangle(465,300,347,40);
+            iSetColor(0,0,0);
+            iText(474,312,"Click here to return to the Main Section",GLUT_BITMAP_HELVETICA_18);
+        }
+
+
+
+
+
+
+
+
+	if(mode==4)
+    { iShowBMP(275,0,highpage);
+      iSetColor(120,200,150);
+            iFilledRectangle(465,300,347,40);
+            iSetColor(0,0,0);
+            iText(474,312,"Click here to return to the Main Section",GLUT_BITMAP_HELVETICA_18);
+    }
+	if(mode==5)
+    {
+            iShowBMP(275,0,credpage);
+            iSetColor(120,200,150);
+            iFilledRectangle(465,300,347,40);
+            iSetColor(0,0,0);
+            iText(474,312,"Click here to return to the Main Section",GLUT_BITMAP_HELVETICA_18);
+    }
 }
+
 
 /*
 	function iMouseMove() is called when the user presses and drags the mouse.
@@ -114,17 +169,25 @@ void iMouse(int button, int state, int mx, int my)
 	printf("%d %d\n",mx,my);
 
     if(mode==0){
-        if(mx>=405 && mx<=673 && my>=301 && my<=392) mode=1;
+        if(mx>=405 && mx<=673 && my>=472 && my<=569) mode=1;
     }
 
     if(mode==1){
         if(mx>=340 && mx<=619 && my>=875 && my<=955) mode=2;
-        if(mx>=340 && mx<=619 && my>=668 && my<=748) mode=3;
-        if(mx>=340 && mx<=619 && my>=461 && my<=541) mode=4;
-        if(mx>=340 && mx<=619 && my>=254 && my<=334) mode=5;
-        if(mx>=340 && mx<=619 && my>=47 && my<=127) mode=0;
+        if(mx>=340 && mx<=619 && my>=726 && my<=806) mode=3;
+        if(mx>=340 && mx<=619 && my>=557 && my<=633) mode=4;
+        if(mx>=340 && mx<=619 && my>=385 && my<=466) mode=5;
+        if(mx>=340 && mx<=619 && my>=216 && my<=298) mode=0;
     }
+    if(mode==3 || mode==4 || mode==5)
+    {
+        if(mx>=463 && mx<=812 && my>=420 && my<=456)
+            mode=1;
+
+    }
+
 }
+
 
 /*
 	function iKeyboard() is called whenever the user hits a key in keyboard.
@@ -135,22 +198,22 @@ void iKeyboard(unsigned char key)
 	//place your codes for other keys here */
     if(mode==2){
         if((key=='w' || key=='W')  && sy<700){
-               sy+=10;
-               bullety+=10;      }
+               sy+=16;
+               bullety+=16;      }
 
                // spaceship er movement ami set kore disi. tor ar change korar dorkar nai
 
         else if((key=='s' || key=='S')  && sy>45){
-               sy-=10;
-               bullety-=10;       }
+               sy-=16;
+               bullety-=16;       }
 
         else if((key=='a' || key=='A')  && sx>10){
-               sx-=10;
-               bulletx-=10;   }
+               sx-=16;
+               bulletx-=16;   }
 
         else if((key=='d' || key=='D')  && sx<900){
-               sx+=10;
-               bulletx+=10;       }
+               sx+=16;
+               bulletx+=16;       }
 
         if(key == 'm');
            {
@@ -214,6 +277,60 @@ void animation()
             // (resolved)
         }
 
+        //asteroid movements
+         if(asterx<1040) {
+                astery-=10;}
+         if(asterx2<1000) astery2-=10;
+         if(asterx3<1000) astery3-=10;
+
+         if(astery==0)
+           {   asterx=sx+150;
+               astery=1400;
+
+                  if(asterx==800)
+                  {
+                      asterx=111;
+                  }
+           }
+         if(astery2==0)
+           {   asterx2=sx;
+               astery2=1500;
+
+                  if(asterx2==950)
+                  {
+                      asterx2=261;
+                  }
+           }
+
+          if(astery3==0)
+           {   asterx3=asterx-400;
+               astery3=1600;
+
+                  if(asterx3==950)
+                  {
+                      asterx3=411;
+                  }
+           }
+
+        //explosion
+        if((asterx>=sx && astery<sy+158 && asterx<sx+150)||(asterx+100>sx && asterx<sx+160 && astery<sy+158))
+        {
+            expox=asterx;
+            expoy=astery;
+            expomode=1;
+        }
+        if((asterx2>=sx && astery2<sy+158 && asterx2<sx+160)||(asterx2+100>sx && asterx2<sx+160 && astery2<sy+158))
+        {
+            expox=asterx2;
+            expoy=astery2;
+            expomode=1;
+        }
+        if((asterx3>=sx && astery3<sy+158 && asterx3<sx+160)||(asterx3+100>sx && asterx3<sx+160 && astery3<sy+158))
+        {
+            expox=asterx3;
+            expoy=astery3;
+            expomode=1;
+        }
 
 
         // bullet ektar por ekta kemne shoot hobe eta partesi na
@@ -241,7 +358,7 @@ int main()
 	//place your own initialization codes here.
 	iSetTimer(10,animation);
 	srand(time(NULL)); // This line is necessary to play the music and run the game simultaneously
-    PlaySound("eightyears.wav",NULL,SND_LOOP | SND_ASYNC);
+    //PlaySound("eightyears.wav",NULL,SND_LOOP | SND_ASYNC);
     // If you get an error while using the PlaySound function, go to Project -> Build Options -> Linker Settings -> Type winmm -> Add
 	iInitialize(1200, 1000, "Spacehship Demo");
 
