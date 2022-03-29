@@ -29,7 +29,16 @@ float astery3=1900;
 int expomode=0;
 float expox,expoy;
 
-
+// alien
+int expomode2=0 ;
+float expox2,expoy2;
+float alx=111;
+float aly=1500;
+float alx2=alx+500;
+float aly2=1700;
+float alx3=alx2+350;
+float aly3=1900;
+float almode=0 ;
 //coordinate place korar age ettu image er height width gula check kore nish calculation er jonno
 
 
@@ -46,6 +55,8 @@ char alien1[50]="bmp images\\alien1.bmp";
 char alien2[50]="bmp images\\alien2.bmp";
 char alien3[50]="bmp images\\alien3.bmp";
 char explosion[50]="bmp images\\explosion.bmp";
+char explosion2[50]="bmp images\\explosion2.bmp";
+
 
 // I can't see how I can crop these images even more.
 char eight[50]="eightyears.wav";
@@ -94,11 +105,21 @@ void iDraw()
         iShowBMP2(asterx,astery,asteroid1,0x00ffffff);
         iShowBMP2(asterx2,astery2,asteroid2,0x00ffffff);
         iShowBMP2(asterx3,astery3,asteroid3,0x00ffffff);
+
         if(expomode==1)
         {
             iShowBMP2(expox,expoy,explosion,0x00ffffff);
             expomode=0;
         }
+        if(expomode2==1)
+        {
+            iShowBMP2(expox2+8,expoy2+1,explosion2,0x00ffffff);
+            expomode2=0;
+        }
+        //alien drawing
+           iShowBMP2(alx,aly,alien1,0x00ffffff);
+           iShowBMP2(alx2,aly2,alien2,0x00ffffff);
+           iShowBMP2(alx3,aly3,alien3,0x00ffffff);
 
 
 	}
@@ -249,9 +270,79 @@ void iSpecialKeyboard(unsigned char key)
 
 void animation()
 {
+     if (mode==2){
+
+        almode++ ;
+      //alien movement
+
+
+      if(almode>500)
+      {
+         if(alx<1030) {
+                aly-=10;}
+         if(alx2<1000) aly2-=10;
+         if(alx3<1000) aly3-=10;
+
+         if(aly==0)
+           {   alx=sx+150;
+               aly=1400;
+
+                  if(alx==800)
+                  {
+                      alx=111;
+                  }
+           }
+
+
+          if(aly2==0)
+           {   alx2=sx;
+               aly2=1500;
+
+                  if(alx2==950)
+                  {
+                      aly2=261;
+                  }
+           }
+
+          if(aly3==0)
+           {   alx3=alx-400;
+               aly3=1600;
+
+                  if(alx3==950)
+                  {
+                      alx3=411;
+                  }
+           }
+
+
+
+        // alien explosion. there are some slightest error in explosion. work on it a bit.
+        if((alx>=sx && aly<sy+158 && alx<sx+150)||(alx+100>sx && alx<sx+160 && aly<sy+158))
+        {
+            expox2=alx;
+            expoy2=aly;
+            expomode2=1;
+        }
+        if((alx2>=sx && aly2<sy+158 && alx2<sx+160)||(alx2+100>sx && alx2<sx+160 && aly2<sy+158))
+        {
+            expox2=alx2;
+            expoy2=aly2;
+            expomode2=1;
+        }
+        if((alx3>=sx && aly3<sy+158 && alx3<sx+160)||(alx3+100>sx && alx3<sx+160 && aly3<sy+158))
+        {
+            expox2=alx3;
+            expoy2=aly3;
+            expomode2=1;
+        }
+   }
+
+
+
+
 
    //commet that targets the spaceship
-    if(mode==2){
+
         float xdiff = cx - targetx;
         float ydiff = cy - targety ;
         float comdx=1;
@@ -278,7 +369,12 @@ void animation()
         }
 
         //asteroid movements
-         if(asterx<1040) {
+   if(almode<471){
+         if(almode==470){ astery=2500;
+         astery2=2500;
+         astery3=2500;}
+
+         if(asterx<1030) {
                 astery-=10;}
          if(asterx2<1000) astery2-=10;
          if(asterx3<1000) astery3-=10;
@@ -331,6 +427,7 @@ void animation()
             expoy=astery3;
             expomode=1;
         }
+   }
 
 
         // bullet ektar por ekta kemne shoot hobe eta partesi na
@@ -358,7 +455,7 @@ int main()
 	//place your own initialization codes here.
 	iSetTimer(10,animation);
 	srand(time(NULL)); // This line is necessary to play the music and run the game simultaneously
-    //PlaySound("eightyears.wav",NULL,SND_LOOP | SND_ASYNC);
+    //PlaySound("spacesound.wav",NULL,SND_LOOP | SND_ASYNC);
     // If you get an error while using the PlaySound function, go to Project -> Build Options -> Linker Settings -> Type winmm -> Add
 	iInitialize(1200, 1000, "Spacehship Demo");
 
