@@ -3,13 +3,12 @@
 // These two header files are necessary for playing music
 # include "windows.h"
 # include "mmsystem.h"
-
+#include<math.h>
 #define scrnwidth 1080
 #define scrnheight 1920
 
 int sx=520,sy=100; //size of the spaceship 160 , 158
 
-int bulletmode=0;
 
 float bulletx=sx+80,bullety=sy+158;
 
@@ -40,6 +39,24 @@ float alx3=alx2+350;
 float aly3=1900;
 float almode=0 ;
 //coordinate place korar age ettu image er height width gula check kore nish calculation er jonno
+
+// bullet shooting
+
+
+int released = 0;
+struct bullet
+{
+    int bx;
+    int by;
+    int relay;
+    int r;
+    int g;
+    int b;
+
+};
+
+struct bullet b[30];
+
 
 
 
@@ -94,12 +111,20 @@ void iDraw()
 	if(mode==2) {
         iShowBMP(0,0,"bmp images\\background.bmp");
         iShowBMP2(sx,sy, spaceship , 0x00ffffff);
-        iSetColor(120,200,150);
-        iFilledCircle(bulletx,bullety,10,100);
-        if(bulletmode==1)
-        {
-            iFilledCircle(sx+80,sy+158,10,100);
+
+        // bullet drawing
+         int i ;
+
+         for(i=0;i<30;i++)
+         {
+
+        iSetColor(b[i].r,b[i].g,b[i].b);
+        iFilledCircle(b[i].bx,b[i].by,10,100);
+
+
         }
+
+
 
         //iShowBMP2(cx,cy, commet , 0x00ffffff);
         iShowBMP2(asterx,astery,asteroid1,0x00ffffff);
@@ -154,6 +179,8 @@ void iDraw()
             iSetColor(0,0,0);
             iText(474,312,"Click here to return to the Main Section",GLUT_BITMAP_HELVETICA_18);
     }
+
+
 }
 
 
@@ -214,39 +241,74 @@ void iMouse(int button, int state, int mx, int my)
 	function iKeyboard() is called whenever the user hits a key in keyboard.
 	key- holds the ASCII value of the key pressed.
 */
+
+
+void shootbullet()
+{
+    int id = released ;
+    b[id].relay = 1;
+    released++ ;
+
+    if(released==29)
+    {
+        released = 0 ;
+    }
+
+}
+
+
 void iKeyboard(unsigned char key)
 {
 	//place your codes for other keys here */
     if(mode==2){
         if((key=='w' || key=='W')  && sy<700){
                sy+=16;
-               bullety+=16;      }
+                }
 
                // spaceship er movement ami set kore disi. tor ar change korar dorkar nai
 
         else if((key=='s' || key=='S')  && sy>45){
                sy-=16;
-               bullety-=16;       }
+                      }
 
         else if((key=='a' || key=='A')  && sx>10){
                sx-=16;
-               bulletx-=16;   }
+                 }
 
         else if((key=='d' || key=='D')  && sx<900){
                sx+=16;
-               bulletx+=16;       }
+                     }
 
-        if(key == 'm');
-           {
-               bulletmode=1;
-           }
+
+
+
+      // bullet movement
+
+       if(key=='m')
+       {
+           shootbullet();
+       }
+
+
+
 
         // Kindly draw an iText in the bottom to let the users know how they can return to the main menu
+
+
+
+
+
+
+
+
         if((key=='x') || (key=='X')) mode=1;
     }
     if(mode>2){
     if((key=='x') || (key=='X')) mode=1;
     }
+
+
+
 
 }
 
@@ -264,9 +326,12 @@ void iSpecialKeyboard(unsigned char key)
 
 	//place your codes for other keys here
 
+
 	// There's no ENTER key available, but the instructions imply that the user must press ENTER to shoot.
 
 }
+
+
 
 void animation()
 {
@@ -432,18 +497,59 @@ void animation()
 
         // bullet ektar por ekta kemne shoot hobe eta partesi na
         // I couldn't resolve this either
-        if(bulletmode==1)
+        int i ;
+        for(i=0;i<30;i++)
         {
-            bullety+=5 ;
-
-            if(bullety==1000)
+            if(b[i].relay==1)
             {
-                bullety=sx+158;
-                bulletmode=0;
+                b[i].by+=5 ;
             }
 
+            else
+               {
+           b[i].bx = sx + 80;
+                       }
         }
+
+
+        for(i=0;i<30;i++)
+           {
+            if(abs(b[i].bx-alx)<50 && abs(b[i].bx-alx)<50)
+            {
+                int collision = 1 ;
+                printf("%d ",collision);
+            }
+
+
+            }
+
+            for(i=0;i<30;i++)
+            {
+            if(abs(b[i].bx-alx2)<50 && abs(b[i].bx-alx2)<50)
+            {
+                int collision = 1 ;
+                printf("%d ",collision);
+            }
+
+
+            }
+
+            for(i=0;i<30;i++)
+            {
+            if(abs(b[i].bx-alx3)<50 && abs(b[i].bx-alx3)<50)
+            {
+                int collision = 1 ;
+                printf("%d ",collision);
+            }
+
+
+            }
+
+
+
     }
+
+
 }
 
 
@@ -455,8 +561,16 @@ int main()
 	//place your own initialization codes here.
 	iSetTimer(10,animation);
 	srand(time(NULL)); // This line is necessary to play the music and run the game simultaneously
-    //PlaySound("spacesound.wav",NULL,SND_LOOP | SND_ASYNC);
+    PlaySound("spacesound.wav",NULL,SND_LOOP | SND_ASYNC);
     // If you get an error while using the PlaySound function, go to Project -> Build Options -> Linker Settings -> Type winmm -> Add
+    for(int i=0;i<30;i++)
+     {
+    b[i].by = sy+170 ;
+    b[i].r = rand()%255 ;
+    b[i].g = rand()%255 ;
+    b[i].b = rand()%255 ;
+            }
+
 	iInitialize(1200, 1000, "Spacehship Demo");
 
 	return 0;
