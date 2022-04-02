@@ -169,7 +169,7 @@ void iMouse(int button, int state, int mx, int my)
 	printf("%d %d\n",mx,my);
 
     if(mode==0){
-        if(mx>=405 && mx<=673 && my>=472 && my<=569) mode=1;
+        if(mx>=405 && mx<=673 && my>=300 && my<=350) mode=1;
     }
 
     if(mode==1){
@@ -358,9 +358,9 @@ int main()
 	//place your own initialization codes here.
 	iSetTimer(10,animation);
 	srand(time(NULL)); // This line is necessary to play the music and run the game simultaneously
-    //PlaySound("eightyears.wav",NULL,SND_LOOP | SND_ASYNC);
+    PlaySound("Game Sounds//Epic Battle.wav",NULL,SND_LOOP | SND_ASYNC);
     // If you get an error while using the PlaySound function, go to Project -> Build Options -> Linker Settings -> Type winmm -> Add
-	iInitialize(1200, 1000, "Spacehship Demo");
+	iInitialize(1200, 1000, "Space Shooter");
 
 	return 0;
 }
