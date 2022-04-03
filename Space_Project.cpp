@@ -3,18 +3,15 @@
 // These two header files are necessary for playing music
 # include "windows.h"
 # include "mmsystem.h"
-
+#include<math.h>
 #define scrnwidth 1080
 #define scrnheight 1920
 
-int sx=520,sy=100; //size of the spaceship 160 , 158
+ int sx=520,sy=100; //size of the spaceship 160 , 158
+// player life has to be displayed on the screen
+ int playerlife=100;
 
-int bulletmode=0;
 
-float bulletx=sx+80,bullety=sy+158;
-
-float cx=sx+200,cy=1000 ,comangle ,comdy ;
-float targetx=600 , targety=100;
 
 //asteroid algorithms
 
@@ -32,14 +29,36 @@ float expox,expoy;
 // alien
 int expomode2=0 ;
 float expox2,expoy2;
-float alx=111;
+float alx=sx;
 float aly=1500;
-float alx2=alx+500;
-float aly2=1700;
-float alx3=alx2+350;
-float aly3=1900;
+float alx2=sx;
+float aly2=1300;
+float alx3=sx+150;
+float aly3=1400;
 float almode=0 ;
+int aldx = 1;
+int aldy = 3;
+int alienshot=0;
+int points=0;
 //coordinate place korar age ettu image er height width gula check kore nish calculation er jonno
+
+// bullet shooting
+
+
+int released = 0;
+struct bullet
+{
+    int bx;
+    int by;
+    int relay;
+    int r;
+    int g;
+    int b;
+
+};
+// here number of bullets is 30 , just add a larger number if you want to increase. and inside every for loop that runs from 0 to 30 ,assign that new number instead of 30
+struct bullet b[30];
+
 
 
 
@@ -94,14 +113,33 @@ void iDraw()
 	if(mode==2) {
         iShowBMP(0,0,"bmp images\\background.bmp");
         iShowBMP2(sx,sy, spaceship , 0x00ffffff);
-        iSetColor(120,200,150);
-        iFilledCircle(bulletx,bullety,10,100);
-        if(bulletmode==1)
+
+        // bullet drawing
+         int i ;
+
+         for(i=0;i<30;i++)
+         {
+
+        iSetColor(b[i].r,b[i].g,b[i].b);
+        iFilledCircle(b[i].bx,b[i].by,10,100);
+
+
+        }
+         // It works as an instruction. if you set alienmode 500 for the aliens to come , just put 500 instead of 100
+         // change the coordinate of the text according to your poshness
+        if(almode<100)
         {
-            iFilledCircle(sx+80,sy+158,10,100);
+            iSetColor(rand()%255,rand()%255,rand()%255);
+            iText(300,250,"AVOID COLLISION WITH THE METEORS",GLUT_BITMAP_HELVETICA_18);
+        }
+        if(almode>100 && almode<100+200)
+        {   //this rand function generates any random integer
+            iSetColor(rand()%255,rand()%255,rand()%255);
+            iText(300,250,"SHOOT THE ALIENS",GLUT_BITMAP_HELVETICA_18);
+
         }
 
-        //iShowBMP2(cx,cy, commet , 0x00ffffff);
+        //asteroid drawing
         iShowBMP2(asterx,astery,asteroid1,0x00ffffff);
         iShowBMP2(asterx2,astery2,asteroid2,0x00ffffff);
         iShowBMP2(asterx3,astery3,asteroid3,0x00ffffff);
@@ -154,6 +192,8 @@ void iDraw()
             iSetColor(0,0,0);
             iText(474,312,"Click here to return to the Main Section",GLUT_BITMAP_HELVETICA_18);
     }
+
+
 }
 
 
@@ -214,39 +254,70 @@ void iMouse(int button, int state, int mx, int my)
 	function iKeyboard() is called whenever the user hits a key in keyboard.
 	key- holds the ASCII value of the key pressed.
 */
+
+
+void shootbullet()
+{
+    int i = released ;
+    b[i].relay = 1;
+    released++ ;
+
+}
+
+
 void iKeyboard(unsigned char key)
 {
 	//place your codes for other keys here */
     if(mode==2){
         if((key=='w' || key=='W')  && sy<700){
                sy+=16;
-               bullety+=16;      }
+                }
 
                // spaceship er movement ami set kore disi. tor ar change korar dorkar nai
 
         else if((key=='s' || key=='S')  && sy>45){
                sy-=16;
-               bullety-=16;       }
+                      }
 
         else if((key=='a' || key=='A')  && sx>10){
                sx-=16;
-               bulletx-=16;   }
+                 }
 
         else if((key=='d' || key=='D')  && sx<900){
                sx+=16;
-               bulletx+=16;       }
+                     }
 
-        if(key == 'm');
-           {
-               bulletmode=1;
-           }
+
+
+
+      // bullet movement
+
+       if(key=='m')
+       {
+           shootbullet();
+       }
+
+
+
 
         // Kindly draw an iText in the bottom to let the users know how they can return to the main menu
+        // sorry , I forgot :')
+
+
+
+
+
+
+
         if((key=='x') || (key=='X')) mode=1;
-    }
+  }
+
     if(mode>2){
-    if((key=='x') || (key=='X')) mode=1;
-    }
+        if((key=='x') || (key=='X')) mode=1;
+               }
+
+
+
 
 }
 
@@ -264,9 +335,12 @@ void iSpecialKeyboard(unsigned char key)
 
 	//place your codes for other keys here
 
+
 	// There's no ENTER key available, but the instructions imply that the user must press ENTER to shoot.
 
 }
+
+
 
 void animation()
 {
@@ -275,44 +349,99 @@ void animation()
         almode++ ;
       //alien movement
 
-
-      if(almode>500)
+       // almode works as a time count for the aliens to come
+      if(almode>10)
       {
-         if(alx<1030) {
-                aly-=10;}
-         if(alx2<1000) aly2-=10;
-         if(alx3<1000) aly3-=10;
-
-         if(aly==0)
-           {   alx=sx+150;
-               aly=1400;
-
-                  if(alx==800)
-                  {
-                      alx=111;
-                  }
-           }
+             // movement of the first alien
+             alx+=aldx ;
+             aly-=aldy;
 
 
-          if(aly2==0)
-           {   alx2=sx;
-               aly2=1500;
+             if(alx>900 || alx<10)
+             {
+                 aldx = -aldx ;
 
-                  if(alx2==950)
-                  {
-                      aly2=261;
-                  }
-           }
+             }
+             if(aly==0)
+             {
+                 aly = 1200 ;
+             }
 
-          if(aly3==0)
-           {   alx3=alx-400;
-               aly3=1600;
+             for(int i=0;i<30;i++)
+             {
+                 if(alx<=b[i].bx && b[i].bx<=alx+100 && b[i].by>aly && b[i].by<aly+40)
+                 {
+                     alienshot=1;
+                     // points is the variable you need to show on the screen
+                     points+=10;
+                 }
+             }
+             if(alienshot==1)
+             {
 
-                  if(alx3==950)
-                  {
-                      alx3=411;
-                  }
-           }
+                 alienshot=0;
+                 aly=1200;
+             }
+
+             //movement of second alien
+             aly2-=4;
+
+             if(aly2==0)
+                { aly2=1200;
+                  alx2=sx ;
+
+                }
+                for(int i=0;i<30;i++)
+             {
+                 if(alx2<=b[i].bx && b[i].bx<=alx2+100 && b[i].by>aly2 && b[i].by<aly2+40)
+                 {
+                     alienshot=1;
+                     // points is the variable you need to show on the screen
+                     points+=10;
+                 }
+             }
+             if(alienshot==1)
+             {
+
+                 alienshot=0;
+                 aly2=1200;
+             }
+
+
+              //movement of the third alien
+                aly3-=5;
+                if(aly3==0)
+                { aly3=1400;
+                  if(alx3>900)
+                    alx3=sx-100 ;
+
+                }
+
+                for(int i=0;i<30;i++)
+             {
+                 if(alx3<=b[i].bx && b[i].bx<=alx3+100 && b[i].by>aly3 && b[i].by<aly3+40)
+                 {
+                     alienshot=1;
+                     // points is the variable you need to show on the screen
+                     points+=10;
+                 }
+             }
+             if(alienshot==1)
+             {
+
+                 alienshot=0;
+                 aly3=1400;
+             }
+
+
+
+
+      }
+
+
+
+
+
 
 
 
@@ -322,20 +451,23 @@ void animation()
             expox2=alx;
             expoy2=aly;
             expomode2=1;
+            playerlife--;
         }
         if((alx2>=sx && aly2<sy+158 && alx2<sx+160)||(alx2+100>sx && alx2<sx+160 && aly2<sy+158))
         {
             expox2=alx2;
             expoy2=aly2;
             expomode2=1;
+            playerlife--;
         }
         if((alx3>=sx && aly3<sy+158 && alx3<sx+160)||(alx3+100>sx && alx3<sx+160 && aly3<sy+158))
         {
             expox2=alx3;
             expoy2=aly3;
             expomode2=1;
+            playerlife--;
         }
-   }
+
 
 
 
@@ -343,33 +475,10 @@ void animation()
 
    //commet that targets the spaceship
 
-        float xdiff = cx - targetx;
-        float ydiff = cy - targety ;
-        float comdx=1;
 
-        if(ydiff==0)
-            ydiff++;
-
-        comangle=ydiff/xdiff ;
-
-        cx-=comdx;
-
-        comdy=comdx*comangle ;
-
-        cy-=comdy;
-
-        if(cy==122)
-        {
-            cx=sx+600;
-            cy=1000;
-            targetx=sx;
-            targety=sy;
-            // commet ta ken jani y=0 te jawar por o x axis borabor move korte thake bujhtesi na. ettu dekhish to
-            // (resolved)
-        }
 
         //asteroid movements
-   if(almode<471){
+       if(almode<471){
          if(almode==470){ astery=2500;
          astery2=2500;
          astery3=2500;}
@@ -414,37 +523,57 @@ void animation()
             expox=asterx;
             expoy=astery;
             expomode=1;
+            playerlife--;
         }
         if((asterx2>=sx && astery2<sy+158 && asterx2<sx+160)||(asterx2+100>sx && asterx2<sx+160 && astery2<sy+158))
         {
             expox=asterx2;
             expoy=astery2;
             expomode=1;
+            playerlife--;
         }
         if((asterx3>=sx && astery3<sy+158 && asterx3<sx+160)||(asterx3+100>sx && asterx3<sx+160 && astery3<sy+158))
         {
             expox=asterx3;
             expoy=astery3;
             expomode=1;
+            playerlife--;
         }
    }
 
 
-        // bullet ektar por ekta kemne shoot hobe eta partesi na
-        // I couldn't resolve this either
-        if(bulletmode==1)
-        {
-            bullety+=5 ;
 
-            if(bullety==1000)
+        // bullet issue resolved
+        int i ;
+        for(i=0;i<30;i++)
+        {
+            if(b[i].relay==1)
             {
-                bullety=sx+158;
-                bulletmode=0;
+                b[i].by+=10 ;
             }
 
+            else
+            {
+                b[i].bx = sx + 80;
+                b[i].by = sy + 170 ;
+            }
+
+
         }
+
+
+
+
+
+
+
+
+
+           }
     }
-}
+
+
+
 
 
 int main()
@@ -457,6 +586,14 @@ int main()
 	srand(time(NULL)); // This line is necessary to play the music and run the game simultaneously
     //PlaySound("spacesound.wav",NULL,SND_LOOP | SND_ASYNC);
     // If you get an error while using the PlaySound function, go to Project -> Build Options -> Linker Settings -> Type winmm -> Add
+    for(int i=0;i<30;i++)
+     {
+    b[i].by = sy+170 ;
+    b[i].r = rand()%255 ;
+    b[i].g = rand()%255 ;
+    b[i].b = rand()%255 ;
+            }
+
 	iInitialize(1200, 1000, "Spacehship Demo");
 
 	return 0;
