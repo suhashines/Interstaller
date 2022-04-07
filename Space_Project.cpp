@@ -31,15 +31,24 @@ int expomode2=0 ;
 float expox2,expoy2;
 float alx=sx;
 float aly=1500;
-float alx2=sx;
+float alx2=450;
 float aly2=1300;
 float alx3=sx+150;
 float aly3=1400;
+int aldy3=5;
+int aldx3=10;
 float almode=0 ;
-int aldx = 1;
-int aldy = 3;
+int aldx = 5;
+int aldy = 4;
 int alienshot=0;
 int points=0;
+float alx4=450;
+float aly4=1200;
+
+float aldx4 = 7 ;
+float aldy4 = 3;
+int bullcount = 1 ;
+
 //coordinate place korar age ettu image er height width gula check kore nish calculation er jonno
 
 // bullet shooting
@@ -63,6 +72,7 @@ struct bullet b[30];
 
 
 
+
 char spaceship[50]="bmp images\\spaceship.bmp";
 char commet[50]="bmp images\\commet.bmp";
 
@@ -73,6 +83,8 @@ char asteroid3[50]="bmp images\\asteroid3.bmp";
 char alien1[50]="bmp images\\alien1.bmp";
 char alien2[50]="bmp images\\alien2.bmp";
 char alien3[50]="bmp images\\alien3.bmp";
+char alien4[50]="bmp images\\alien4.bmp";
+char alien5[50]="bmp images\\alien5.bmp";
 char explosion[50]="bmp images\\explosion.bmp";
 char explosion2[50]="bmp images\\explosion2.bmp";
 
@@ -126,16 +138,22 @@ void iDraw()
 
         }
          // It works as an instruction. if you set alienmode 500 for the aliens to come , just put 500 instead of 100
-         // change the coordinate of the text according to your poshness
+
         if(almode<100)
         {
             iSetColor(rand()%255,rand()%255,rand()%255);
-            iText(300,250,"AVOID COLLISION WITH THE METEORS",GLUT_BITMAP_HELVETICA_18);
+            iText(450,500,"AVOID COLLISION WITH THE METEORS",GLUT_BITMAP_HELVETICA_18);
         }
-        if(almode>100 && almode<100+200)
+        if(almode>500 && almode<500+200)
         {   //this rand function generates any random integer
             iSetColor(rand()%255,rand()%255,rand()%255);
-            iText(300,250,"SHOOT THE ALIENS",GLUT_BITMAP_HELVETICA_18);
+            iText(450,500,"SHOOT THE ALIENS",GLUT_BITMAP_HELVETICA_18);
+
+        }
+        if(almode>750 && almode<850)
+        {   //this rand function generates any random integer
+            iSetColor(rand()%255,rand()%255,rand()%255);
+            iText(450,500,"Press x to go back",GLUT_BITMAP_HELVETICA_18);
 
         }
 
@@ -149,15 +167,21 @@ void iDraw()
             iShowBMP2(expox,expoy,explosion,0x00ffffff);
             expomode=0;
         }
-        if(expomode2==1)
-        {
-            iShowBMP2(expox2+8,expoy2+1,explosion2,0x00ffffff);
-            expomode2=0;
-        }
+
         //alien drawing
            iShowBMP2(alx,aly,alien1,0x00ffffff);
            iShowBMP2(alx2,aly2,alien2,0x00ffffff);
            iShowBMP2(alx3,aly3,alien3,0x00ffffff);
+           iShowBMP2(alx4,aly4,alien4,0x00ffffff);
+
+         if(expomode2==1)
+        {
+            iShowBMP2(expox2+8,expoy2+1,explosion2,0x00ffffff);
+            expomode2=0;
+        }
+
+
+
 
 
 	}
@@ -227,7 +251,7 @@ void iMouse(int button, int state, int mx, int my)
 	}   */
 
     // This is a blessing. Just click anywhere on the game and watch the corresponding coordinates get printed onto the terminal.
-	printf("%d %d\n",mx,my);
+	//printf("%d %d\n",mx,my);
 
     if(mode==0){
         if(mx>=405 && mx<=673 && my>=472 && my<=569) mode=1;
@@ -302,6 +326,14 @@ void iKeyboard(unsigned char key)
 
         // Kindly draw an iText in the bottom to let the users know how they can return to the main menu
         // sorry , I forgot :')
+        if(key=='p')
+        {
+            iPauseTimer(0);
+        }
+        if(key=='r')
+        {
+            iResumeTimer(0);
+        }
 
 
 
@@ -347,17 +379,18 @@ void animation()
      if (mode==2){
 
         almode++ ;
+
       //alien movement
 
        // almode works as a time count for the aliens to come
-      if(almode>10)
+      if(almode>500)
       {
              // movement of the first alien
              alx+=aldx ;
              aly-=aldy;
 
 
-             if(alx>900 || alx<10)
+             if(alx>900 || alx<1)
              {
                  aldx = -aldx ;
 
@@ -384,54 +417,124 @@ void animation()
              }
 
              //movement of second alien
-             aly2-=4;
+             if(alx2<1030)
+                aly2-=10;
+
 
              if(aly2==0)
-                { aly2=1200;
-                  alx2=sx ;
+            {   alx2=sx-200;
+                 aly2=1400;
 
-                }
+                  if(alx2==800)
+                  {
+                      alx2=111;
+                  }
+           }
+
+
+
+
                 for(int i=0;i<30;i++)
-             {
+                 {
                  if(alx2<=b[i].bx && b[i].bx<=alx2+100 && b[i].by>aly2 && b[i].by<aly2+40)
                  {
                      alienshot=1;
                      // points is the variable you need to show on the screen
                      points+=10;
                  }
-             }
+                 }
+
              if(alienshot==1)
              {
 
                  alienshot=0;
-                 aly2=1200;
+                 aly2=1500;
              }
 
 
               //movement of the third alien
-                aly3-=5;
-                if(aly3==0)
-                { aly3=1400;
-                  if(alx3>900)
-                    alx3=sx-100 ;
 
-                }
+             alx3+=aldx3 ;
+             aly3-=aldy3;
+
+
+             if(alx3>900 || alx3<1)
+             {
+                 aldx3 = -aldx3 ;
+
+             }
+             if(aly3==0)
+             {
+                 aly3 = 1200 ;
+             }
+
+
 
                 for(int i=0;i<30;i++)
-             {
+                {
                  if(alx3<=b[i].bx && b[i].bx<=alx3+100 && b[i].by>aly3 && b[i].by<aly3+40)
                  {
                      alienshot=1;
                      // points is the variable you need to show on the screen
                      points+=10;
                  }
-             }
+                }
              if(alienshot==1)
              {
 
                  alienshot=0;
-                 aly3=1400;
+                 aly3=1200;
              }
+
+             //movement of fourth alien
+              if(almode>900){
+
+                    //if(almode>2000)
+                    //{
+                        //aly4=1200;
+
+                    //}
+
+                aly4-=aldy4 ;
+
+                if(aly4<500)
+                {
+                    aldy4=0;
+                    alx4 -= aldx4 ;
+                    if(alx4<0 || alx4>900)
+                    {
+                        aldx4 = - aldx4 ;
+
+                    }
+
+                }
+
+                 for(int i=0;i<30;i++)
+                {
+                 if(alx4<=b[i].bx && b[i].bx<=alx4+150 && b[i].by>aly4 && b[i].by<aly4+60)
+                 {
+                     alienshot=1;
+                     //bullcount++;
+                     // points is the variable you need to show on the screen
+                     points+=10;
+                 }
+                }
+             if(alienshot==1)
+             {
+
+                 alienshot=0;
+                  aly4-=50;
+
+
+             }
+             if(aly4<200)
+                 { aly4=1200;
+                 }
+
+
+
+              }
+
 
 
 
@@ -467,6 +570,13 @@ void animation()
             expomode2=1;
             playerlife--;
         }
+        if((alx4>=sx && aly4<sy+200 && alx4<sx+200)||(alx4+100>sx && alx4<sx+120 && aly4<sy+200))
+        {
+            expox2=alx4;
+            expoy2=aly4;
+            expomode2=1;
+            playerlife--;
+        }
 
 
 
@@ -474,7 +584,6 @@ void animation()
 
 
    //commet that targets the spaceship
-
 
 
         //asteroid movements
@@ -549,7 +658,7 @@ void animation()
         {
             if(b[i].relay==1)
             {
-                b[i].by+=10 ;
+                b[i].by+=20 ;
             }
 
             else
