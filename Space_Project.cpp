@@ -79,12 +79,12 @@ char explosion2[50]="bmp images\\explosion2.bmp";
 
 // I can't see how I can crop these images even more.
 char eight[50]="eightyears.wav";
-char intro[50]="Menu Background\\Intro1.bmp";
-char page[50]="Menu Background\\Page 2-3.bmp";
+char intro[50]="Menu Background\\Intro.bmp";
+char page[50]="Menu Background\\Page 2.bmp";
 char inspage[50]="Menu Background\\Instruction Page2.bmp";
 char highpage[50]="Menu Background\\High score page2.bmp";
 char credpage[50]="Menu Background\\Credit Page2.bmp";
-char newgame[50]="Menu Icons\\New Game2.bmp";
+char newgame[50]="Menu Icons\\New Game.bmp";
 char instructions[50]="Menu Icons\\Instructions2.bmp";
 char highscores[50]="Menu Icons\\High Scores2.bmp";
 char credits[50]="Menu Icons\\Credits2.bmp";
@@ -104,11 +104,11 @@ void iDraw()
 	}
 	if(mode==1) {
         iShowBMP(0,0,page);
-        iShowBMP(340,875,newgame);
-        iShowBMP(340,668,instructions);
+        iShowBMP(200,700,newgame);
+        /*iShowBMP(340,668,instructions);
         iShowBMP(340,461,highscores);
         iShowBMP(340,254,credits);
-        iShowBMP(340,47,exits);
+        iShowBMP(340,47,exits);*/
 	}
 	if(mode==2) {
         iShowBMP(0,0,"bmp images\\background.bmp");
@@ -230,15 +230,15 @@ void iMouse(int button, int state, int mx, int my)
 	printf("%d %d\n",mx,my);
 
     if(mode==0){
-        if(mx>=405 && mx<=673 && my>=300 && my<=350) mode=1;
+        if(mx>=212 && mx<=352 && my>=526 && my<=572) mode=1;
     }
 
     if(mode==1){
-        if(mx>=340 && mx<=619 && my>=875 && my<=955) mode=2;
-        if(mx>=340 && mx<=619 && my>=726 && my<=806) mode=3;
-        if(mx>=340 && mx<=619 && my>=557 && my<=633) mode=4;
-        if(mx>=340 && mx<=619 && my>=385 && my<=466) mode=5;
-        if(mx>=340 && mx<=619 && my>=216 && my<=298) mode=0;
+        if(mx>=200 && mx<=330 && my>=700 && my<=740) mode=2;
+        //if(mx>=175 && mx<=619 && my>=726 && my<=806) mode=3;
+        //if(mx>=175 && mx<=619 && my>=557 && my<=633) mode=4;
+        //if(mx>=175 && mx<=619 && my>=385 && my<=466) mode=5;
+        //if(mx>=175 && mx<=619 && my>=216 && my<=298) mode=0;
     }
     if(mode==3 || mode==4 || mode==5)
     {
@@ -584,10 +584,10 @@ int main()
 	//place your own initialization codes here.
 	iSetTimer(10,animation);
 	srand(time(NULL)); // This line is necessary to play the music and run the game simultaneously
-    PlaySound("Game Sounds//Epic Battle.wav",NULL,SND_LOOP | SND_ASYNC);
+    //PlaySound("Game Sounds//Epic Battle.wav",NULL,SND_LOOP | SND_ASYNC);
     //PlaySound("spacesound.wav",NULL,SND_LOOP | SND_ASYNC);
     // If you get an error while using the PlaySound function, go to Project -> Build Options -> Linker Settings -> Type winmm -> Add
-	iInitialize(1200, 1000, "Space Shooter");
+	iInitialize(563, 1000, "Space Shooter");
     for(int i=0;i<30;i++)
      {
     b[i].by = sy+170 ;
@@ -596,7 +596,7 @@ int main()
     b[i].b = rand()%255 ;
             }
 
-	iInitialize(1200, 1000, "Spacehship Demo");
+	//iInitialize(1200, 1000, "Spacehship Demo");
 
 	return 0;
 }
