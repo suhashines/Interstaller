@@ -1,0 +1,17 @@
+if(mode==0){
+        if(mx>=405 && mx<=673 && my>=472 && my<=569) mode=1;
+    }
+
+    if(mode==1){
+        if(mx>=340 && mx<=619 && my>=875 && my<=955) mode=2;
+        if(mx>=340 && mx<=619 && my>=726 && my<=806) mode=3;
+        if(mx>=340 && mx<=619 && my>=557 && my<=633) mode=4;
+        if(mx>=340 && mx<=619 && my>=385 && my<=466) mode=5;
+        if(mx>=340 && mx<=619 && my>=216 && my<=298) mode=0;
+    }
+    if(mode==3 || mode==4 || mode==5)
+    {
+        if(mx>=463 && mx<=812 && my>=420 && my<=456)
+            mode=1;
+
+    }

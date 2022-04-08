@@ -693,7 +693,7 @@ int main()
 	//place your own initialization codes here.
 	iSetTimer(10,animation);
 	srand(time(NULL)); // This line is necessary to play the music and run the game simultaneously
-    //PlaySound("spacesound.wav",NULL,SND_LOOP | SND_ASYNC);
+    PlaySound("spacesound.wav",NULL,SND_LOOP | SND_ASYNC);
     // If you get an error while using the PlaySound function, go to Project -> Build Options -> Linker Settings -> Type winmm -> Add
     for(int i=0;i<30;i++)
      {
