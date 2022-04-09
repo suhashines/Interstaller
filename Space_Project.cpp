@@ -253,6 +253,7 @@ void iMouse(int button, int state, int mx, int my)
     // This is a blessing. Just click anywhere on the game and watch the corresponding coordinates get printed onto the terminal.
 	//printf("%d %d\n",mx,my);
 
+
     if(mode==0){
         if(mx>=405 && mx<=673 && my>=472 && my<=569) mode=1;
     }
