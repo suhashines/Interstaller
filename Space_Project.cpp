@@ -1,6 +1,5 @@
 # include "iGraphics.h"
 # include "gl.h"
-// These two header files are necessary for playing music
 # include "windows.h"
 # include "mmsystem.h"
 #include<math.h>
@@ -8,52 +7,74 @@
 #define scrnwidth 1080
 #define scrnheight 1920
 
- int sx=520,sy=0; //size of the spaceship 160 , 158
-// player life has to be displayed on the screen
- int playerlife=100;
 
+int sx = 520, sy = 0; //size of the spaceship 160 , 158
+
+int playerlife = 4; // player life has to be displayed on the screen
 
 
 //asteroid algorithms
 
-float asterx=111;
-float astery=1500;
-float asterx2=asterx+500;
-float astery2=1700;
-float asterx3=asterx2+350;
-float astery3=1900;
+float asterx = 111;
+float astery = 1500;
+
+float asterx2 = asterx + 500;
+float astery2 = 1700;
+
+float asterx3 = asterx2 + 350;
+float astery3 = 1900;
+
 
 //explosion algorithm
-int expomode=0;
+
+int expomode = 0;
 float expox,expoy;
+int expomode2 = 0 ;
+float expox2, expoy2;
+
 
 // alien
-int expomode2=0 ;
-float expox2,expoy2;
-float alx=sx;
-float aly=1500;
-float alx2=450;
-float aly2=1300;
-float alx3=sx+150;
-float aly3=1400;
-int aldy3=5;
-int aldx3=10;
-float almode=0 ;
+
+float alx = sx;
+float aly = 1500;
+
+float alx2 = 450;
+float aly2 = 1300;
+
+float alx3 = sx + 150;
+float aly3 = 1400;
+
+int aldy3 = 5;
+int aldx3 = 10;
+
 int aldx = 5;
 int aldy = 4;
-int alienshot=0;
-int points=0;
-float alx4=450;
-float aly4=1200;
 
-float aldx4 = 7 ;
+float almode = 0 ;
+
+float alx4 = 450;
+float aly4 = 1200;
+
+float aldx4 = 7;
 float aldy4 = 3;
-int bullcount = 1 ;
 
-//coordinate place korar age ettu image er height width gula check kore nish calculation er jonno
+int alienshot = 0;
+int points = 0;
+int bullcount = 1;
+
+int j = 0;
+
+
+struct player{
+
+    int score;
+    char name[30];
+
+} player[1000];
+
+
 
 // bullet shooting
-
 
 int released = 0;
 struct bullet
@@ -66,37 +87,33 @@ struct bullet
     int b;
 
 };
-// here number of bullets is 30 , just add a larger number if you want to increase. and inside every for loop that runs from 0 to 30 ,assign that new number instead of 30
+// here number of bullets is 1000 , just add a larger number if you want to increase. and inside every for loop that runs from 0 to 1000 ,assign that new number instead of 30
 struct bullet b[1000];
-
-
-
-
 
 
 char spaceship[50]="bmp images\\spaceship.bmp";
 char commet[50]="bmp images\\commet.bmp";
 
+char asteroid1[50]="bmp images\\asteroid1.bmp";
+char asteroid2[50]="bmp images\\asteroid2.bmp";
+char asteroid3[50]="bmp images\\asteroid3.bmp";
 
-char asteroid1[50]="bmp images1\\asteroid1.bmp";
-char asteroid2[50]="bmp images1\\asteroid2.bmp";
-char asteroid3[50]="bmp images1\\asteroid3.bmp";
 char alien1[50]="bmp images\\alien1.bmp";
 char alien2[50]="bmp images\\alien2.bmp";
 char alien3[50]="bmp images\\alien3.bmp";
 char alien4[50]="bmp images\\alien4.bmp";
 char alien5[50]="bmp images\\alien5.bmp";
+
 char explosion[50]="bmp images\\explosion.bmp";
 char explosion2[50]="bmp images\\explosion2.bmp";
 
-
-// I can't see how I can crop these images even more.
-char eight[50]="eightyears.wav";
-char intro[50]="Menu Background\\Intro.bmp";
+char intro[50]="Menu Background\\Intro1.bmp";
 char page[50]="Menu Background\\Page 2.bmp";
 char inspage[50]="Menu Background\\Instruction Page2.bmp";
 char highpage[50]="Menu Background\\High score page2.bmp";
 char credpage[50]="Menu Background\\Credit Page2.bmp";
+char blank[50]="Menu Background\\blank page.bmp";
+
 char newgame[50]="Menu Icons\\New Game.bmp";
 char instructions[50]="Menu Icons\\Instructions.bmp";
 char highscores[50]="Menu Icons\\High Scores.bmp";
@@ -110,60 +127,77 @@ void iDraw()
 	//place your drawing codes here
 
 	iClear();
-    // Worked with the menu
     // You'll need to adjust the coordinates again if you change the window size
 	if(mode==0) {
+
         iShowBMP(0,0,intro);
+
 	}
+
+
 	if(mode==1) {
-        iShowBMP(0,0,page);
-        iShowBMP(200,700,newgame);
-        iShowBMP(200,590,instructions);
-        iShowBMP(200,480,highscores);
-        iShowBMP(200,370,credits);
-        iShowBMP(200,260,exits);
+
+        iShowBMP(260,0,page);
+        iShowBMP(460,720,newgame);
+        iShowBMP(460,610,instructions);
+        iShowBMP(460,500,highscores);
+        iShowBMP(460,390,credits);
+        iShowBMP(460,260,exits);
+
 	}
+
+
 	if(mode==2) {
+
         iShowBMP(0,0,"bmp images\\background.bmp");
         iShowBMP2(sx,sy, spaceship , 0x00ffffff);
 
         char s[20];
         char l[3];
+
         itoa(points,s,10);
         itoa(playerlife,l,10);
+
         iSetColor(150,200,100);
         iText(840,900,"Score: ",GLUT_BITMAP_HELVETICA_18);
         iText(900,900,s,GLUT_BITMAP_HELVETICA_18);
+
         iSetColor(150,0,100);
         iText(840,860,"Lives Remaining: ",GLUT_BITMAP_HELVETICA_18);
         iText(1000,860,l,GLUT_BITMAP_HELVETICA_18);
 
+
         // bullet drawing
-         int i ;
+         int i=0 ;
 
-         for(i=0;i<1000;i++)
-         {
+        for(i=0;i<1000;i++)
+        {
 
-        iSetColor(b[i].r,b[i].g,b[i].b);
-        iFilledCircle(b[i].bx,b[i].by,10,100);
-
+            iSetColor(b[i].r,b[i].g,b[i].b);
+            iFilledCircle(b[i].bx,b[i].by,10,100);
 
         }
+
          // It works as an instruction. if you set alienmode 500 for the aliens to come , just put 500 instead of 100
 
         if(almode<100)
         {
             iSetColor(rand()%255,rand()%255,rand()%255);
             iText(450,500,"AVOID COLLISION WITH THE METEORS",GLUT_BITMAP_HELVETICA_18);
+
         }
+
         if(almode>100 && almode<100+200)
-        {   //this rand function generates any random integer
+        {
+             //this rand function generates any random integer
             iSetColor(rand()%255,rand()%255,rand()%255);
             iText(450,500,"SHOOT THE ALIENS",GLUT_BITMAP_HELVETICA_18);
 
         }
+
         if(almode>750 && almode<850)
-        {   //this rand function generates any random integer
+        {
+            //this rand function generates any random integer
             iSetColor(rand()%255,rand()%255,rand()%255);
             iText(450,500,"Press x to go back",GLUT_BITMAP_HELVETICA_18);
 
@@ -185,6 +219,10 @@ void iDraw()
            iShowBMP2(alx2,aly2,alien2,0x00ffffff);
            iShowBMP2(alx3,aly3,alien3,0x00ffffff);
            iShowBMP2(alx4,aly4,alien4,0x00ffffff);
+           iSetColor(0,0,0);
+           iRectangle(alx4+45,aly4+160,100,20);
+           iSetColor(130+almode/10,230-almode/10,0);
+           iFilledRectangle(alx4+45,aly4+160,120-almode/10,20);
 
          if(expomode2==1)
         {
@@ -192,43 +230,70 @@ void iDraw()
             expomode2=0;
         }
 
-
-
-
-
 	}
+
+
 	if(mode==3)
         {
-            iShowBMP(275,0,inspage);
-            iSetColor(120,200,150);
-            iFilledRectangle(465,300,347,40);
-            iSetColor(0,0,0);
-            iText(474,312,"Click here to return to the Main Section",GLUT_BITMAP_HELVETICA_18);
+            iShowBMP(202.5,0,inspage);
         }
 
 
-
-
-
-
-
-
 	if(mode==4)
-    { iShowBMP(275,0,highpage);
-      iSetColor(120,200,150);
-            iFilledRectangle(465,300,347,40);
-            iSetColor(0,0,0);
-            iText(474,312,"Click here to return to the Main Section",GLUT_BITMAP_HELVETICA_18);
-    }
+        {
+            iShowBMP(202.5,0,highpage);
+        }
+
+
 	if(mode==5)
-    {
-            iShowBMP(275,0,credpage);
-            iSetColor(120,200,150);
-            iFilledRectangle(465,300,347,40);
+        {
+            iShowBMP(202.5,0,credpage);
+        }
+
+
+    if(mode==3 || mode==4 || mode==5){
+
+            iSetColor(rand()%255,255,rand()%255);
+            iFilledRectangle(365,30,347,40);
+            iSetColor(0,0,255);
+            iRectangle(365,30,347,40);
             iSetColor(0,0,0);
-            iText(474,312,"Click here to return to the Main Section",GLUT_BITMAP_HELVETICA_18);
+            iText(388,42,"Press x to return to the Main Section",GLUT_BITMAP_HELVETICA_18);
+
     }
 
+
+    if(mode==6)
+    {       iShowBMP(0,0,blank);
+
+            iSetColor(64,112,101);
+            iFilledRectangle(scrnwidth/5,scrnheight/6,scrnwidth*3/5,scrnheight/6);
+
+            iSetColor(25,74,63);
+            iFilledRectangle(scrnwidth*22.5/100,scrnheight/6,scrnwidth*55/100,scrnheight/6);
+
+            iSetColor(255,100,100);
+            iText(scrnwidth*42.5/100,scrnheight*35/120,"Enter Your Name",GLUT_BITMAP_TIMES_ROMAN_24);
+
+            iSetColor(255,255,255);
+            iFilledRectangle(scrnwidth*30/100,scrnheight*29/120,scrnwidth*40/100,scrnheight*3/120);
+
+            iSetColor(0,0,0);
+            iRectangle(scrnwidth*30/100,scrnheight*29/120,scrnwidth*40/100,scrnheight*3/120);
+
+            iSetColor(64,112,101);
+            iFilledRectangle(scrnwidth*47/100,scrnheight*25/120,scrnwidth*5/100,scrnheight*2/120);
+
+            iSetColor(0,0,0);
+            iRectangle(scrnwidth*47/100,scrnheight*25/120,scrnwidth*5/100,scrnheight*2/120);
+
+            iSetColor(0,0,0);
+            iText(scrnwidth*48/100,scrnheight*25.5/120,"OK",GLUT_BITMAP_TIMES_ROMAN_24);
+
+            iSetColor(0,0,0);
+            iText(scrnwidth*31/100,scrnheight*30/120,player[j].name,GLUT_BITMAP_TIMES_ROMAN_24);
+
+    }
 
 }
 
@@ -266,20 +331,30 @@ void iMouse(int button, int state, int mx, int my)
 	printf("%d %d\n",mx,my);
 
     if(mode==0){
-        if(mx>=212 && mx<=352 && my>=526 && my<=572) mode=1;
+        if(mx>=405 && mx<=675 && my>=300 && my<=390) mode=1;
     }
 
+
     if(mode==1){
-        if(mx>=200 && mx<=330 && my>=700 && my<=740) mode=2;
-        if(mx>=200 && mx<=340 && my>=590 && my<=630) mode=3;
-        if(mx>=200 && mx<=340 && my>=480 && my<=520) mode=4;
-        if(mx>=200 && mx<=340 && my>=370 && my<=410) mode=5;
-        if(mx>=200 && mx<=340 && my>=260 && my<=300) mode=0;
+        if(mx>=460 && mx<=600 && my>=720 && my<=760) mode=2;
+        if(mx>=460 && mx<=600 && my>=610 && my<=650) mode=3;
+        if(mx>=460 && mx<=600 && my>=500 && my<=540) mode=4;
+        if(mx>=460 && mx<=600 && my>=390 && my<=430) mode=5;
+        if(mx>=460 && mx<=600 && my>=260 && my<=300) mode=0;
     }
-    if(mode==3 || mode==4 || mode==5)
+    /*if(mode==3 || mode==4 || mode==5)
     {
         if(mx>=463 && mx<=812 && my>=420 && my<=456)
             mode=1;
+
+    }*/
+
+
+    if(mode==6){
+
+        if(mx>=scrnwidth*47/100 && mx<=scrnwidth*52/100 && my>=scrnheight*25/120 && my<=scrnheight*27/120){
+            mode=1;
+        }
 
     }
 
@@ -324,16 +399,12 @@ void iKeyboard(unsigned char key)
                      }
 
 
-
-
       // bullet movement
 
        if(key=='m')
        {
            shootbullet();
        }
-
-
 
 
         // Kindly draw an iText in the bottom to let the users know how they can return to the main menu
@@ -348,22 +419,42 @@ void iKeyboard(unsigned char key)
         }
 
 
-
-
-
-
-
         if((key=='x') || (key=='X')) mode=1;
   }
 
-    if(mode>2){
+    if(mode>2 && mode!=6){
+
         if((key=='x') || (key=='X')) mode=1;
-               }
+
+    }
 
 
+    if(mode==6){
 
+        int len=0;
+        char str[1];
+
+        /*if(key == '\r')
+		{
+		    //len--;
+			name[len]='\0';
+
+		}
+		else
+		{*/
+		    str[0] = key;
+		    strcat(player[j].name,str);
+		    //for ()
+		    //player[j].name[len]=key;
+			//len++;
+		//}
+
+       //}
+
+    }
 
 }
+
 
 /*
 	function iSpecialKeyboard() is called whenver user hits special keys like-
@@ -374,6 +465,8 @@ void iKeyboard(unsigned char key)
 	GLUT_KEY_LEFT, GLUT_KEY_UP, GLUT_KEY_RIGHT, GLUT_KEY_DOWN, GLUT_KEY_PAGE UP,
 	GLUT_KEY_PAGE DOWN, GLUT_KEY_HOME, GLUT_KEY_END, GLUT_KEY_INSERT
 */
+
+
 void iSpecialKeyboard(unsigned char key)
 {
 
@@ -383,7 +476,6 @@ void iSpecialKeyboard(unsigned char key)
 	// There's no ENTER key available, but the instructions imply that the user must press ENTER to shoot.
 
 }
-
 
 
 void animation()
@@ -433,32 +525,31 @@ void animation()
                 aly2-=10;
 
 
-             if(aly2==0)
-            {   alx2=sx-200;
-                 aly2=1400;
+            if(aly2==0)
+            {
+                alx2=sx-200;
+                aly2=1400;
 
-                  if(alx2==800)
-                  {
-                      alx2=111;
-                  }
-           }
+                if(alx2==800)
+                {
+                    alx2=111;
+                }
 
-
+            }
 
 
                 for(int i=0;i<1000;i++)
                  {
-                 if(alx2<=b[i].bx && b[i].bx<=alx2+100 && b[i].by>aly2 && b[i].by<aly2+40)
-                 {
-                     alienshot=1;
-                     // points is the variable you need to show on the screen
-                     points+=10;
-                 }
+                     if(alx2<=b[i].bx && b[i].bx<=alx2+100 && b[i].by>aly2 && b[i].by<aly2+40)
+                     {
+                         alienshot=1;
+                         // points is the variable you need to show on the screen
+                         points+=10;
+                     }
                  }
 
              if(alienshot==1)
              {
-
                  alienshot=0;
                  aly2=1500;
              }
@@ -499,7 +590,7 @@ void animation()
              }
 
              //movement of fourth alien
-              if(almode>900){
+              if(almode>100){
 
                     //if(almode>2000)
                     //{
@@ -521,8 +612,8 @@ void animation()
 
                 }
 
-                 for(int i=0;i<1000;i++)
-                {
+            for(int i=0;i<1000;i++)
+            {
                  if(alx4<=b[i].bx && b[i].bx<=alx4+150 && b[i].by>aly4 && b[i].by<aly4+60)
                  {
                      alienshot=1;
@@ -530,26 +621,22 @@ void animation()
                      // points is the variable you need to show on the screen
                      points+=10;
                  }
-                }
-             if(alienshot==1)
-             {
+            }
 
-                 alienshot=0;
-                  aly4-=50;
+            if(alienshot==1)
+            {
+
+                alienshot=0;
+                aly4-=50;
 
 
              }
-             if(aly4<200)
-                 { aly4=1200;
-                 }
+            if(aly4<200 || almode==1200)
+            {
+                aly4=1200;
+            }
 
-
-
-              }
-
-
-
-
+        }
 
       }
 
@@ -558,10 +645,7 @@ void animation()
 
 
 
-
-
-        // alien explosion. there are some slightest error in explosion. work on it a bit.
-        if((alx>=sx && aly<sy+158 && alx<sx+150)||(alx+100>sx && alx<sx+160 && aly<sy+158))
+        if(alx+100>=sx && aly<sy+158 && alx<sx+160 && aly+75>sy)
         {
             expox2=alx;
             expoy2=aly;
@@ -570,9 +654,9 @@ void animation()
             aly=0;
             playerlife--;
             sx=520;
-            sy=100;
+            sy=0;
         }
-        if((alx2>=sx && aly2<sy+158 && alx2<sx+160)||(alx2+100>sx && alx2<sx+160 && aly2<sy+158))
+        if(alx2+100>=sx && aly2<sy+158 && alx2<sx+160 && aly2+75>sy)
         {
             expox2=alx2;
             expoy2=aly2;
@@ -581,9 +665,9 @@ void animation()
             aly2=0;
             playerlife--;
             sx=520;
-            sy=100;
+            sy=0;
         }
-        if((alx3>=sx && aly3<sy+158 && alx3<sx+160)||(alx3+100>sx && alx3<sx+160 && aly3<sy+158))
+        if(alx3+100>=sx && aly3<sy+158 && alx3<sx+160 && aly3+75>sy)
         {
             expox2=alx3;
             expoy2=aly3;
@@ -592,9 +676,9 @@ void animation()
             aly3=0;
             playerlife--;
             sx=520;
-            sy=100;
+            sy=0;
         }
-        if((alx4>=sx && aly4<sy+200 && alx4<sx+200)||(alx4+100>sx && alx4<sx+120 && aly4<sy+200))
+        if(alx4+194>=sx && aly4<sy+158 && alx4<sx+160 && aly4+156>sy)
         {
             expox2=alx4;
             expoy2=aly4;
@@ -603,10 +687,8 @@ void animation()
             aly4=0;
             playerlife--;
             sx=520;
-            sy=100;
+            sy=0;
         }
-
-
 
 
 
@@ -616,9 +698,9 @@ void animation()
 
         //asteroid movements
        if(almode>0){ //471
-         if(almode==470){ astery=2500;
+         /*if(almode==470){ astery=2500;
          astery2=2500;
-         astery3=2500;}
+         astery3=2500;}*/
 
          if(asterx<1030) {
                 astery-=10;}
@@ -655,7 +737,7 @@ void animation()
            }
 
         //explosion
-        if((asterx>=sx && astery<sy+158 && asterx<sx+150)||(asterx+100>sx && asterx<sx+160 && astery<sy+158))
+        if(asterx+50>=sx && astery<sy+158 && asterx<sx+160 && asterx+47>sy)
         {
             expox=asterx;
             expoy=astery;
@@ -664,7 +746,7 @@ void animation()
             astery=0;
             playerlife--;
             sx=520;
-            sy=100;
+            sy=0;
             /*for(int i=0; i<10; i++){
             expox=sx;
             expoy=sy;
@@ -674,7 +756,7 @@ void animation()
             playerlife--;*/
 
         }
-        if((asterx2>=sx && astery2<sy+158 && asterx2<sx+160)||(asterx2+100>sx && asterx2<sx+160 && astery2<sy+158))
+        if(asterx2+50>=sx && astery2<sy+158 && asterx2<sx+160 && asterx2+65>sy)
         {
             expox=asterx2;
             expoy=astery2;
@@ -683,7 +765,7 @@ void animation()
             astery2=0;
             playerlife--;
             sx=520;
-            sy=100;
+            sy=0;
             /*for(int i=0; i<10; i++){
             expox=sx;
             expoy=sy;
@@ -692,7 +774,7 @@ void animation()
             astery2=-1;
             playerlife--;*/
         }
-        if((asterx3>=sx && astery3<sy+158 && asterx3<sx+160)||(asterx3+100>sx && asterx3<sx+160 && astery3<sy+158))
+        if(asterx3+50>=sx && astery3<sy+158 && asterx3<sx+160 && asterx3+50>sy)
         {
             expox=asterx3;
             expoy=astery3;
@@ -701,7 +783,7 @@ void animation()
             astery3=0;
             playerlife--;
             sx=520;
-            sy=100;
+            sy=0;
             /*for(int i=0; i<10; i++){
             expox=sx;
             expoy=sy;
@@ -739,9 +821,19 @@ void animation()
 
     if(playerlife<=0) {
 
-            mode=1;
+
+
+            FILE *fp;
+            fp = fopen("High Scores.txt", "w");
+            fprintf(fp,"%s\n",player[j].name);
+            mode=6;
+            fclose(fp);
+            //name
+            //mode=1;
             almode=0;
             playerlife=4;
+
+
 
             //asteroid algorithms
 
@@ -785,31 +877,33 @@ void animation()
     }
 
 
-
-
-
 int main()
 {
 //    PlaySound((LPCSTR) "C:\\Users\\Public\\Music\\Sample Music\\Sleep Away.mp3", NULL, SND_FILENAME | SND_ASYNC);
 //    DWORD dwError = GetLastError();
 
 	//place your own initialization codes here.
+
 	iSetTimer(10,animation);
 	srand(time(NULL)); // This line is necessary to play the music and run the game simultaneously
     //PlaySound("Game Sounds//Epic Battle.wav",NULL,SND_LOOP | SND_ASYNC);
     //PlaySound("spacesound.wav",NULL,SND_LOOP | SND_ASYNC);
+
     // If you get an error while using the PlaySound function, go to Project -> Build Options -> Linker Settings -> Type winmm -> Add
+
 	iInitialize(1080, 1000, "Space Shooter"); //563
+
     for(int i=0;i<1000;i++)
-     {
-    b[i].by = sy+170 ;
-    b[i].r = rand()%255 ;
-    b[i].g = rand()%255 ;
-    b[i].b = rand()%255 ;
-            }
+    {
+        b[i].by = sy+170 ;
+        b[i].r = rand()%255 ;
+        b[i].g = rand()%255 ;
+        b[i].b = rand()%255 ;
+    }
 
 	//iInitialize(1200, 1000, "Spacehship Demo");
 
 	return 0;
+
 }
 
