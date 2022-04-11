@@ -1,0 +1,4 @@
+ 0
+Anan 5
+Suhas 10
+Prithu 20
